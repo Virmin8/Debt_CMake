@@ -1,0 +1,12 @@
+GolfPad 12 1 11 2025 310.44 ZAR
+GoogleOne 1 13 12 2024 34.99 ZAR
+Serengeti 1 1 12 2024 500 ZAR
+PlayMoreGolf 1 1 12 2024 299 ZAR
+DiscoveryBankSuite 1 7 12 2024 219 ZAR
+NewsServices 12 24 11 2024 22.55 USD
+ProtonPass 12 4 7 2025 23.88 USD
+Cloudflare 12 28 6 2025 5.68 USD
+AbsaAccount 1 12 12 2024 57 ZAR
+Patreon 1 1 12 2024 45 ZAR
+Netflix 1 1 12 2024 199 ZAR
+PlexPass 1 26 12 2024 75.99 ZAR
