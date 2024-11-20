@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS  OFF)
 
 project(Debt2)
-file(GLOB dependencies_SRC CONFIGURE_DEPENDS "*.h" "*.cpp" "*.txt")
+file(GLOB dependencies_SRC CONFIGURE_DEPENDS "*.h" "*.cpp")
 find_package(nlohmann_json CONFIG REQUIRED)
 
 find_package(cpr CONFIG REQUIRED)
