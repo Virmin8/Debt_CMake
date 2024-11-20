@@ -1,7 +1,0 @@
-# ninja log v6
-9	37	7537965223686154	C:/Users/Micha/source/repos/Debt_CMake/build/CMakeFiles/cmake.verify_globs	72c12c709df1b240
-42	483	7537965224017030	CMakeFiles/Debt2.dir/TextColour.cpp.obj	53c16dc51ae4e364
-38	2392	7537965223987041	CMakeFiles/Debt2.dir/Debt2.cpp.obj	7ba472278dace3c
-45	2411	7537965224057106	CMakeFiles/Debt2.dir/functions.cpp.obj	29ed9b58d7374f16
-50	2555	7537965224097308	CMakeFiles/Debt2.dir/onlineservice.cpp.obj	3a705520503b0f5
-2555	4198	7537965249150048	Debt2.exe	7d5e67d41b0d2ca1
