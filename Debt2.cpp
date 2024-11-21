@@ -19,14 +19,24 @@ int main() {
     int count = 0;
 
     std::vector<OnlineService> Services;
-
+  
     double total = 0.00;
     bool quit = false;
+
+    ReadFromFile(Services);
     
     std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n\n";
 
-    ReadFromFile(Services);
-    std::cout << "Would you like to view a list of your current Services? (y or n): "; //Needs user checks!!
+    std::cout << "Would you like to add a Service? (y or n): ";
+    std::cin >> answer;
+
+    if(answer == "y" || answer == "Y")
+    {
+        addService(Services); 
+    }
+
+    
+    std::cout << "\nWould you like to view a list of your current Services? (y or n): "; //Needs user checks!!
     std::cin >> answer;
 
     if (answer == "y" || answer == "Y") 
@@ -34,8 +44,14 @@ int main() {
         ListServices(Services);
     }
 
-    //addService(Services);  Ask for user input
-    //removeService(Services); //Ask for user input
+    std::cout << "\nWould you like to remove a Service? (y or n): ";
+    std::cin >> answer;
+
+    if (answer == "y" || answer == "Y")
+    {
+        removeService(Services);
+    }
+     
 
     while (!quit)
     {

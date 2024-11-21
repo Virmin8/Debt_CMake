@@ -1,23 +1,40 @@
 #include "functions.h"
 
+void addUser(std::string name)
+{
+    try
+    {
+        SQLite::Database    db("../Services.db");
+        SQLite::Statement   query(db, "SELECT * FROM Test");
+
+
+        while (query.executeStep())
+        {
+            
+
+
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+}
 
 void ReadFromFile(std::vector<OnlineService> &service)
 {
     try
     {
-        
         SQLite::Database    db("../Services.db");
-
-        
         SQLite::Statement   query(db, "SELECT * FROM Test");
 
-        
+
         while (query.executeStep())
         {
             OnlineService onlineservices(query.getColumn(0), query.getColumn(1), query.getColumn(2), query.getColumn(3), query.getColumn(4), query.getColumn(5), query.getColumn(6));
             service.push_back(onlineservices);
 
-            
+
         }
     }
     catch (std::exception& e)
@@ -137,11 +154,10 @@ double RestMonthly(int month, std::vector<OnlineService>& Services)
     double total = 0.00;
     for (int i = 0; i < Services.size(); i++)
     {
-        if (Services[i].getMonth() == month || Services[i].getEveryfewMonths() == 1)
+        if ((Services[i].getMonth() == month || Services[i].getEveryfewMonths() == 1) && Services[i].getDay() >= time->tm_mday)
         {
             
-            if (Services[i].getDay() >= time->tm_mday)
-            {
+            
                 if (Services[i].getConvertedCost() == 0)
                 {
                     total += Services[i].getCost();
@@ -150,7 +166,7 @@ double RestMonthly(int month, std::vector<OnlineService>& Services)
                 {
                     total += Services[i].getConvertedCost();
                 }
-            }
+            
 
         }
     }
@@ -229,25 +245,75 @@ void addService(std::vector<OnlineService>& Services)
     int month;
     int year;
     double cost;
-    std::string symbol;
+    std::string symbol = "ZAR";
+    bool exists = true;
     std::cout << "\nAdding new Service:";
-    std::cout << "\nPlease enter service name? :";
+    std::cout << "\nPlease enter service name: ";
     std::cin >> name;
-    std::cout << "Please enter every few months? :";
+
+    while (exists)
+    {
+
+
+        for (int i = 0; i < Services.size(); i++)
+        {
+            if (name == Services[i].getName())
+            {
+                std::cout << "Service already Exists!!!\n";
+                std::cout << "\nPlease enter service name: ";
+                std::cin >> name;
+                exists = true;
+
+            }
+            else
+                exists = false;
+        }
+    }
+    std::cout << "Please enter every few months: ";
     std::cin >> everyfemonths;
     std::cout << "Please enter payment day: ";
     std::cin >> day;
-    std::cout << "Please enter payment month? :";
+    std::cout << "Please enter payment month: ";
     std::cin >> month;
-    std::cout << "Please enter payment year? :";
+    std::cout << "Please enter payment year: ";
     std::cin >> year;
-    std::cout << "Please enter payment cost? :";
+    std::cout << "Please enter payment cost: ";
     std::cin >> cost;
-    std::cout << "Please enter Currency Symbol? :";
-    std::cin >> symbol;
+    /*std::cout << "Please enter Currency Symbol? :"; 
+    std::cin >> symbol;*/
+    std::cout << "\n";
 
     OnlineService tmp(name, everyfemonths, day, month, year, cost, symbol);
     Services.push_back(tmp);
+
+    try
+    {
+       
+            SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+            SQLite::Statement   query(db, "INSERT INTO Test (Name,Monthly,Day,Month,Year,Cost,Currency) VALUES (?,?,?,?,?,?,?)");
+
+            SQLite::Transaction transaction(db);
+
+            query.bind(1, name);
+            query.bind(2, everyfemonths);
+            query.bind(3, day);
+            query.bind(4, month);
+            query.bind(5, year);
+            query.bind(6, cost);
+            query.bind(7, symbol);
+
+            query.exec();
+            query.reset();
+
+            transaction.commit();
+
+
+        }
+        catch (std::exception& e)
+        {
+            std::cout << "exception: " << e.what() << std::endl;
+        }
+    
 }
 
 void removeService(std::vector<OnlineService>& Services)
@@ -261,7 +327,7 @@ void removeService(std::vector<OnlineService>& Services)
         std::cout << "\n" << Services[i].getName();
 
     }
-    std::cout << "\n";
+    std::cout << "\n\n";
     std::cin >> name;
 
     for (int i = 0; i < Services.size(); i++)
@@ -271,6 +337,26 @@ void removeService(std::vector<OnlineService>& Services)
             Services.erase(Services.begin() + i);
         }
 
+    }
+    try
+    {
+        SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+        SQLite::Statement   query(db, "DELETE From Test WHERE NAME = (?)");
+
+        SQLite::Transaction transaction(db);
+
+        query.bind(1, name);
+
+        query.exec();
+        query.reset();
+
+        transaction.commit();
+
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
     }
 
    

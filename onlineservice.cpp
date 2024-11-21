@@ -182,7 +182,7 @@ void OnlineService::print()
         totalCost = convertedCost;
     }
 
-    std::cout << name << " Costs: " << totalCost  << " Next Payment Due: " << day << "/" << month << "/" << year << " " << everyfemonths << "\n";
+    std::cout << name << " Costs: " << totalCost  << " Next Payment Due: " << day << "/" << month << "/" << year << " " << "\n";
 }
 
 void OnlineService::print(int _month, int _year, std::string _paid)
@@ -196,7 +196,7 @@ void OnlineService::print(int _month, int _year, std::string _paid)
     {
         totalCost = convertedCost;
     }
-    std::cout << name << " Costs: " << totalCost << " Next Payment Due: " << day << "/" << _month << "/" << year + _year << " Paid: " << _paid << " " << everyfemonths << "\n";
+    std::cout << name << " Costs: " << totalCost << " Next Payment Due: " << day << "/" << _month << "/" << year + _year << " Paid: " << _paid << " "  << "\n";
 }
 
 void OnlineService::setLength(int _length)

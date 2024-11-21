@@ -23,7 +23,7 @@ void ListServices(std::vector<OnlineService>&);
 void addService(std::vector<OnlineService>&);
 void removeService(std::vector<OnlineService>&);
 
-
+void addUser(std::string);
 
 
 #endif
