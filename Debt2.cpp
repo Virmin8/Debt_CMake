@@ -1,10 +1,8 @@
-//add and remove services. Done (just need to ask user if he wants to add or remove)
 // Need to add user restrictions
 // work on app version, backend seems pretty much done
 // add short term Service
-// Optimize code, duplicating to many if functions
-// Add Self Hosted Database
-// change path from string to filesystem
+// Add Users
+
 #pragma
 #include "functions.h"
 #include "onlineservice.h"
