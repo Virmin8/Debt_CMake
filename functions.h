@@ -6,6 +6,7 @@
 #include <fstream>
 #include <chrono>
 #include "TextColour.h"
+#include "SQLiteCpp/SQLiteCpp.h"
 
 tm* getTime();
 

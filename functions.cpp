@@ -3,52 +3,33 @@
 
 void ReadFromFile(std::vector<OnlineService> &service)
 {
-    std::string servicename;
-    std::string filename = "UserServices.txt";
-    int months;
-    int day;
-    int month;
-    int year;
-    double cost;
-    std::string  symbol;
-
-    std::ifstream fileIn;
-    fileIn.open(filename.c_str());
-    if (!fileIn.is_open())
+    try
     {
-        std::cout << "First Run, Loading Defaults!!\n\n";
-        filename = "../Services.txt";
-        fileIn.open(filename.c_str());
-        if (!fileIn.is_open())
-        {
-            std::cout << "Error Loading Defaults, Closing Program!!";
-            // Needs to be implemented!! iasdiasdiasid
+        
+        SQLite::Database    db("../Services.db");
 
-        }
+        
+        SQLite::Statement   query(db, "SELECT * FROM Test");
 
-    }
-    else
-    {
-        std::cout << "Resuming from Last Session!!\n\n";
-    }
-    
-        while (fileIn >> servicename >> months >> day >> month >> year >> cost >> symbol)
+        
+        while (query.executeStep())
         {
-            OnlineService onlineservices(servicename, months, day, month, year, cost, symbol);
+            OnlineService onlineservices(query.getColumn(0), query.getColumn(1), query.getColumn(2), query.getColumn(3), query.getColumn(4), query.getColumn(5), query.getColumn(6));
             service.push_back(onlineservices);
-        }
-    
 
-    if (fileIn.is_open())
+            
+        }
+    }
+    catch (std::exception& e)
     {
-        fileIn.close();
+        std::cout << "exception: " << e.what() << std::endl;
     }
 
 }
 
-void WriteToFile(std::vector<OnlineService>& Services)
+/*void WriteToFile(std::vector<OnlineService>& Services)
 {
-    std::string filename = "../UserServices.txt";
+   /* std::string filename = "../UserServices.txt";
     std::ofstream fileout;
 
    
@@ -74,8 +55,40 @@ void WriteToFile(std::vector<OnlineService>& Services)
                 fileout.close();
             }
         }
+
+    try
+    {
+        SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+
+        db.exec("DROP TABLE IF EXISTS User");
+
+        db.exec("CREATE TABLE User (Name TEXT PRIMARY KEY, Monthly INTEGER, Day INTEGER, Month INTEGER, Year INTEGER, Cost REAL, Currency TEXT)");
+
+        SQLite::Transaction transaction(db);
+        SQLite::Statement query{ db, "INSERT INTO User (Name) VALUES (?)" };
+
+
+        for (int i = 0; i < Services.size(); i++)
+        {
+            
+
+            
+                query.bind(1, Services[i].getName());
+                query.exec();
+                query.reset();
+            
+
+            // Commit transaction
+            transaction.commit();
+        }
+        
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
     
-}
+}*/
 
 double TotalMonthly(int month, std::vector<OnlineService>& Services)
 {
