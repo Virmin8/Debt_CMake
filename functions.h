@@ -24,6 +24,8 @@ void addService(std::vector<OnlineService>&);
 void removeService(std::vector<OnlineService>&);
 
 void addUser(std::string);
-
+void removeUser(std::string);
+void removeDatabase(std::string name, std::string table);
+void listUsers();
 
 #endif

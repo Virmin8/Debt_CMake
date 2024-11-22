@@ -2,6 +2,8 @@
 // work on app version, backend seems pretty much done
 // add short term Service
 // Add Users
+// Add List of Currencies
+//Move SQL to seperate Class
 
 #pragma
 #include "functions.h"
@@ -23,14 +25,51 @@ int main() {
 
     ReadFromFile(Services);
     
-    std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n\n";
+    std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n";
 
-    std::cout << "Would you like to add a Service? (y or n): ";
+    std::cout << "\nWhich User Would you like to view Services for: ";
+    std::cin >> answer;
+    if (answer == "y" || answer == "Y")
+    {
+        listUsers();
+    }
+
+    std::cout << "\nWould you like to add a User? (y or n): ";
+    std::cin >> answer;
+
+    if (answer == "y" || answer == "Y")
+    {
+        std::cout << "Please add User name: ";
+        std::cin >> answer;
+        addUser(answer);
+    }
+
+    std::cout << "\nWould you like to remove a User? (y or n): ";
+    std::cin >> answer;
+
+    if (answer == "y" || answer == "Y")
+    {
+        listUsers();
+
+        std::cout << "Please add User name: ";
+        std::cin >> answer;
+        removeUser(answer);
+    }
+
+    std::cout << "\nWould you like to add a Service? (y or n): ";
     std::cin >> answer;
 
     if(answer == "y" || answer == "Y")
     {
         addService(Services); 
+    }
+
+    std::cout << "\nWould you like to remove a Service? (y or n): ";
+    std::cin >> answer;
+
+    if (answer == "y" || answer == "Y")
+    {
+        removeService(Services);
     }
 
     
@@ -42,13 +81,7 @@ int main() {
         ListServices(Services);
     }
 
-    std::cout << "\nWould you like to remove a Service? (y or n): ";
-    std::cin >> answer;
-
-    if (answer == "y" || answer == "Y")
-    {
-        removeService(Services);
-    }
+    
      
 
     while (!quit)

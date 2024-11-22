@@ -1,24 +1,69 @@
 #include "functions.h"
 
-void addUser(std::string name)
+void listUsers()
 {
     try
     {
+        
         SQLite::Database    db("../Services.db");
-        SQLite::Statement   query(db, "SELECT * FROM Test");
+        SQLite::Statement   namequery(db, "SELECT Name FROM Users");
 
-
-        while (query.executeStep())
+        SQLite::Transaction transaction(db);
+        while (namequery.executeStep())
         {
-            
-
-
+            std::string tmpname = namequery.getColumn(0);
+            std::cout << tmpname << std::endl;
         }
+        
+
+        namequery.reset();
+
     }
     catch (std::exception& e)
     {
         std::cout << "exception: " << e.what() << std::endl;
     }
+}
+void addUser(std::string name)
+{
+    try
+    {
+        bool value = false;
+        SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+        SQLite::Statement   query(db, "INSERT INTO Users (Name) VALUES (?)");
+        SQLite::Statement   namequery(db, "SELECT Name FROM Users");
+
+        SQLite::Transaction transaction(db);
+        while (namequery.executeStep())
+        {
+            std::string tmpname = namequery.getColumn(0);
+            if (tmpname == name)
+            {
+                value = true;
+            }
+        }
+        namequery.reset();
+        if (value == false)
+        {
+            query.bind(1, name);
+            query.exec();
+            query.reset();
+
+            transaction.commit();
+        }
+        else
+            std::cout << "User already Exists!!!\n";
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+}
+
+void removeUser(std::string name)
+{
+    removeDatabase(name,"Users");
 }
 
 void ReadFromFile(std::vector<OnlineService> &service)
@@ -36,6 +81,7 @@ void ReadFromFile(std::vector<OnlineService> &service)
 
 
         }
+        query.reset();
     }
     catch (std::exception& e)
     {
@@ -197,6 +243,7 @@ void print(int month, std::vector<OnlineService>& Services)
     for (int i = 0; i < Services.size(); i++)
     {
         int year = 0;
+        int tmpmonth = 0;
         std::string paid = "No";
         SetColour(91);
 
@@ -206,18 +253,22 @@ void print(int month, std::vector<OnlineService>& Services)
                 {
                     SetColour(92);
                     paid = "Yes";
+                    tmpmonth = 1;
                 }
                 else if (month == time->tm_mon + 1 && Services[i].getDay() <= time->tm_mday)
                 {
                     SetColour(92);
                     paid = "Yes";
+                    tmpmonth = 1;
+                    if (Services[i].getEveryfewMonths() == 12)
+                    {
+                        year = 0;
+                        tmpmonth = 0;
+                    }
                 }
-                if (Services[i].getEveryfewMonths() == 12)
-                {
-                    year = -1;
-                }
+                
           
-            Services[i].print(month, year, paid);
+            Services[i].print(month + tmpmonth, year, paid);
             ResetColour();
            
         }
@@ -338,15 +389,26 @@ void removeService(std::vector<OnlineService>& Services)
         }
 
     }
+   
+    removeDatabase(name, "Test");
+   
+    ListServices(Services);
+
+
+
+}
+
+void removeDatabase(std::string name, std::string table)
+{
     try
     {
+        std::string tmpquery = "DELETE From " + table + " WHERE Name = (?)";
         SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-        SQLite::Statement   query(db, "DELETE From Test WHERE NAME = (?)");
+        SQLite::Statement   query(db, tmpquery);
 
         SQLite::Transaction transaction(db);
 
         query.bind(1, name);
-
         query.exec();
         query.reset();
 
@@ -358,11 +420,4 @@ void removeService(std::vector<OnlineService>& Services)
     {
         std::cout << "exception: " << e.what() << std::endl;
     }
-
-   
-    ListServices(Services);
-
-
-
 }
-
