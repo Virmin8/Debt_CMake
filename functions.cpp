@@ -24,6 +24,7 @@ void listUsers()
         std::cout << "exception: " << e.what() << std::endl;
     }
 }
+
 void addUser(std::string name)
 {
     try
@@ -89,69 +90,6 @@ void ReadFromFile(std::vector<OnlineService> &service)
     }
 
 }
-
-/*void WriteToFile(std::vector<OnlineService>& Services)
-{
-   /* std::string filename = "../UserServices.txt";
-    std::ofstream fileout;
-
-   
-   
-    std::cout << "Saving!!\n\n";
-    
-    
-        
-        fileout.open(filename);
-        if (!fileout.is_open())
-        {
-            std::cout << "File cannot be read!!" << std::endl; //Needs error implementation, on what the program should do 
-        }
-        else
-        {
-            for (int i = 0; i < Services.size(); i++)
-            {
-                fileout << Services[i].getName() << " " << Services[i].getEveryfewMonths() << " " << Services[i].getDay() << " " << Services[i].getMonth() << " " << Services[i].getYear() << " " << Services[i].getCost() << " " << Services[i].getSymbol() << std::endl;
-
-            }
-            if (fileout.is_open())
-            {
-                fileout.close();
-            }
-        }
-
-    try
-    {
-        SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-
-        db.exec("DROP TABLE IF EXISTS User");
-
-        db.exec("CREATE TABLE User (Name TEXT PRIMARY KEY, Monthly INTEGER, Day INTEGER, Month INTEGER, Year INTEGER, Cost REAL, Currency TEXT)");
-
-        SQLite::Transaction transaction(db);
-        SQLite::Statement query{ db, "INSERT INTO User (Name) VALUES (?)" };
-
-
-        for (int i = 0; i < Services.size(); i++)
-        {
-            
-
-            
-                query.bind(1, Services[i].getName());
-                query.exec();
-                query.reset();
-            
-
-            // Commit transaction
-            transaction.commit();
-        }
-        
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "exception: " << e.what() << std::endl;
-    }
-    
-}*/
 
 double TotalMonthly(int month, std::vector<OnlineService>& Services)
 {
@@ -234,7 +172,7 @@ double RestYearly(std::vector<OnlineService>& Services)
 void print(int month, std::vector<OnlineService>& Services)
 {
     tm* time = getTime();
-    int tmpmonth = time->tm_mon + 1;
+    int tmpmonth2 = time->tm_mon + 1;
     int tmpday = time->tm_mday;
     int tmpyear = time->tm_year + 1900;
     
@@ -253,13 +191,19 @@ void print(int month, std::vector<OnlineService>& Services)
                 {
                     SetColour(92);
                     paid = "Yes";
-                    tmpmonth = 1;
+                    if (tmpmonth2 == month)
+                    {
+                        tmpmonth = 1;
+                    }
                 }
                 else if (month == time->tm_mon + 1 && Services[i].getDay() <= time->tm_mday)
                 {
                     SetColour(92);
                     paid = "Yes";
-                    tmpmonth = 1;
+                    if (tmpmonth2 == month)
+                    {
+                        tmpmonth = 1;
+                    }
                     if (Services[i].getEveryfewMonths() == 12)
                     {
                         year = 0;

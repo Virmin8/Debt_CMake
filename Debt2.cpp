@@ -1,13 +1,13 @@
-// Need to add user restrictions
 // work on app version, backend seems pretty much done
 // add short term Service
-// Add Users
+// Add Users, which link to seperate Services
 // Add List of Currencies
-//Move SQL to seperate Class
+// Move SQL to seperate Class
 
 #pragma
 #include "functions.h"
 #include "onlineservice.h"
+#include "program.h"
 
 int main() {
     
@@ -15,112 +15,60 @@ int main() {
     int day = now->tm_mday;
     int month = now->tm_mon + 1;
     int year = now->tm_year + 1900;
-    std::string answer;
-    int count = 0;
+    char answer;
+    std::string response;
 
     std::vector<OnlineService> Services;
   
-    double total = 0.00;
+    
     bool quit = false;
+
 
     ReadFromFile(Services);
     
     std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n";
 
-    std::cout << "\nWhich User Would you like to view Services for: ";
-    std::cin >> answer;
-    if (answer == "y" || answer == "Y")
-    {
-        listUsers();
-    }
-
-    std::cout << "\nWould you like to add a User? (y or n): ";
-    std::cin >> answer;
-
-    if (answer == "y" || answer == "Y")
-    {
-        std::cout << "Please add User name: ";
-        std::cin >> answer;
-        addUser(answer);
-    }
-
-    std::cout << "\nWould you like to remove a User? (y or n): ";
-    std::cin >> answer;
-
-    if (answer == "y" || answer == "Y")
-    {
-        listUsers();
-
-        std::cout << "Please add User name: ";
-        std::cin >> answer;
-        removeUser(answer);
-    }
-
-    std::cout << "\nWould you like to add a Service? (y or n): ";
-    std::cin >> answer;
-
-    if(answer == "y" || answer == "Y")
-    {
-        addService(Services); 
-    }
-
-    std::cout << "\nWould you like to remove a Service? (y or n): ";
-    std::cin >> answer;
-
-    if (answer == "y" || answer == "Y")
-    {
-        removeService(Services);
-    }
-
-    
-    std::cout << "\nWould you like to view a list of your current Services? (y or n): "; //Needs user checks!!
-    std::cin >> answer;
-
-    if (answer == "y" || answer == "Y") 
-    {
-        ListServices(Services);
-    }
-
-    
-     
-
     while (!quit)
     {
-        std::cout << "\nList of Services for the Month: \n";
-        print(month, Services);
-        total = RestMonthly(month, Services);
-
-        if(count == 0)
-        {
-            std::cout << "\nTotal Cost for the rest of the month: " << total << "\n";
-            total = RestYearly(Services);
-            std::cout << "Total Cost for the rest of the year: " << total << "\n";
-            count++;
-        }
-        
-
-        total = TotalMonthly(month,Services);
-        std::cout << std::endl << "Total Cost for the month: " << total << "\n";
-        total = TotalYearly(Services);
-        std::cout << "Total Cost for the year: " << total <<  "\n\n";
-        
-        total = 0.00;
-
-        std::cout << "\nPlease enter which month you would like to see the costs for (1-12) or Quit (q or Q): "; //Needs user checks!!
+        std::cout << "\nAdd User (1), Remove User (2), Add Service (3), Remove Service (4), List Users (5), List Services (6), Run Program (7), Quit (8): ";
         std::cin >> answer;
-        std::cout << "\n";
 
-        if(answer == "q" || answer == "Q")
+        switch (answer)
         {
+        case '1':
+            std::cout << "Please add User name: ";
+            std::cin >> response;
+            addUser(response);
+            break;
+        case '2':
+            listUsers();
+            std::cout << "Please select User name: ";
+            std::cin >> response;
+            removeUser(response);
+            break;
+        case '3':
+            addService(Services);
+            break;
+        case '4':
+            removeService(Services);
+            break;
+        case '5':
+            listUsers();
+            break;
+        case '6':
+            ListServices(Services);
+            break;
+        case '8':
             quit = true;
+            break;
+        case '7':
+            mainProgram(month, Services);
+            break;
+        default:
+            std::cout << "\nInvalid Input!!\n";
         }
-        else
-        {
-            month = stoi(answer);
-        }
-        
-    }
 
-    //WriteToFile(Services);
+    }
+     
     return 0;
 }
