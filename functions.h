@@ -6,7 +6,7 @@
 #include <fstream>
 #include <chrono>
 #include "TextColour.h"
-#include "SQLiteCpp/SQLiteCpp.h"
+#include "sqlitefile.h"
 
 tm* getTime();
 
@@ -20,12 +20,11 @@ double RestYearly(std::vector<OnlineService>&);
 void print(int,std::vector<OnlineService>&);
 void ListServices(std::vector<OnlineService>&);
 
-void addService(std::vector<OnlineService>&);
-void removeService(std::vector<OnlineService>&);
+void addServiceList(std::vector<OnlineService>&,SQLiteClass&);
+void removeService(std::vector<OnlineService>& ,SQLiteClass& );
 
 void addUser(std::string);
-void removeUser(std::string);
-void removeDatabase(std::string name, std::string table);
+void removeUser(std::string, SQLiteClass&);
 void listUsers();
 
 #endif

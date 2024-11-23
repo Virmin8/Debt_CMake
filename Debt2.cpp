@@ -1,13 +1,15 @@
 // work on app version, backend seems pretty much done
 // add short term Service
 // Add Users, which link to seperate Services
+// Prepared User Class
 // Add List of Currencies
-// Move SQL to seperate Class
+
 
 #pragma
 #include "functions.h"
 #include "onlineservice.h"
 #include "program.h"
+#include "sqlitefile.h"
 
 int main() {
     
@@ -20,11 +22,12 @@ int main() {
 
     std::vector<OnlineService> Services;
   
-    
+    SQLiteClass database;
+
     bool quit = false;
 
 
-    ReadFromFile(Services);
+    database.ReadFromFile(Services);
     
     std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n";
 
@@ -38,19 +41,19 @@ int main() {
         case '1':
             std::cout << "Please add User name: ";
             std::cin >> response;
-            addUser(response);
+            database.addUser(response);
             break;
         case '2':
             listUsers();
             std::cout << "Please select User name: ";
             std::cin >> response;
-            removeUser(response);
+            removeUser(response,database);
             break;
         case '3':
-            addService(Services);
+            addServiceList(Services,database);
             break;
         case '4':
-            removeService(Services);
+            removeService(Services,database);
             break;
         case '5':
             listUsers();

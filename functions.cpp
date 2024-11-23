@@ -25,70 +25,9 @@ void listUsers()
     }
 }
 
-void addUser(std::string name)
+void removeUser(std::string name, SQLiteClass& db)
 {
-    try
-    {
-        bool value = false;
-        SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-        SQLite::Statement   query(db, "INSERT INTO Users (Name) VALUES (?)");
-        SQLite::Statement   namequery(db, "SELECT Name FROM Users");
-
-        SQLite::Transaction transaction(db);
-        while (namequery.executeStep())
-        {
-            std::string tmpname = namequery.getColumn(0);
-            if (tmpname == name)
-            {
-                value = true;
-            }
-        }
-        namequery.reset();
-        if (value == false)
-        {
-            query.bind(1, name);
-            query.exec();
-            query.reset();
-
-            transaction.commit();
-        }
-        else
-            std::cout << "User already Exists!!!\n";
-
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "exception: " << e.what() << std::endl;
-    }
-}
-
-void removeUser(std::string name)
-{
-    removeDatabase(name,"Users");
-}
-
-void ReadFromFile(std::vector<OnlineService> &service)
-{
-    try
-    {
-        SQLite::Database    db("../Services.db");
-        SQLite::Statement   query(db, "SELECT * FROM Test");
-
-
-        while (query.executeStep())
-        {
-            OnlineService onlineservices(query.getColumn(0), query.getColumn(1), query.getColumn(2), query.getColumn(3), query.getColumn(4), query.getColumn(5), query.getColumn(6));
-            service.push_back(onlineservices);
-
-
-        }
-        query.reset();
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "exception: " << e.what() << std::endl;
-    }
-
+    db.removeDatabase(name,"Users");
 }
 
 double TotalMonthly(int month, std::vector<OnlineService>& Services)
@@ -232,7 +171,7 @@ void ListServices(std::vector<OnlineService>& Services)
 
 }
 
-void addService(std::vector<OnlineService>& Services)
+void addServiceList(std::vector<OnlineService>& Services, SQLiteClass& db)
 {
     std::string name;
     int everyfemonths;
@@ -281,37 +220,11 @@ void addService(std::vector<OnlineService>& Services)
     OnlineService tmp(name, everyfemonths, day, month, year, cost, symbol);
     Services.push_back(tmp);
 
-    try
-    {
-       
-            SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-            SQLite::Statement   query(db, "INSERT INTO Test (Name,Monthly,Day,Month,Year,Cost,Currency) VALUES (?,?,?,?,?,?,?)");
-
-            SQLite::Transaction transaction(db);
-
-            query.bind(1, name);
-            query.bind(2, everyfemonths);
-            query.bind(3, day);
-            query.bind(4, month);
-            query.bind(5, year);
-            query.bind(6, cost);
-            query.bind(7, symbol);
-
-            query.exec();
-            query.reset();
-
-            transaction.commit();
-
-
-        }
-        catch (std::exception& e)
-        {
-            std::cout << "exception: " << e.what() << std::endl;
-        }
+    db.addService(name, everyfemonths, day, month, year, cost, symbol);
     
 }
 
-void removeService(std::vector<OnlineService>& Services)
+void removeService(std::vector<OnlineService>& Services, SQLiteClass& db)
 {
     std::string name;
 
@@ -334,7 +247,7 @@ void removeService(std::vector<OnlineService>& Services)
 
     }
    
-    removeDatabase(name, "Test");
+    db.removeDatabase(name, "Test");
    
     ListServices(Services);
 
@@ -342,26 +255,3 @@ void removeService(std::vector<OnlineService>& Services)
 
 }
 
-void removeDatabase(std::string name, std::string table)
-{
-    try
-    {
-        std::string tmpquery = "DELETE From " + table + " WHERE Name = (?)";
-        SQLite::Database    db("../Services.db", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-        SQLite::Statement   query(db, tmpquery);
-
-        SQLite::Transaction transaction(db);
-
-        query.bind(1, name);
-        query.exec();
-        query.reset();
-
-        transaction.commit();
-
-
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "exception: " << e.what() << std::endl;
-    }
-}
