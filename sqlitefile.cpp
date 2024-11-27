@@ -123,7 +123,7 @@ void SQLiteClass::removeService(std::string name)
 {
     try
     {
-        std::string tmpquery = "DELETE From Service WHERE Name = (?)";
+        std::string tmpquery = "DELETE From Services WHERE Name = (?)";
         SQLite::Statement   query(dbwrite, tmpquery);
 
         SQLite::Transaction transaction(dbwrite);
