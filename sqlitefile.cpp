@@ -10,6 +10,55 @@ SQLiteClass::~SQLiteClass()
     
 }
 
+int SQLiteClass::createUser(std::string name)
+{
+    try
+    {
+
+        SQLite::Statement   namequery(dbread, "SELECT Admin FROM Users WHERE Name = (?)");
+        namequery.bind(1, name);
+
+        
+        while (namequery.executeStep())
+        {
+            int tmp = namequery.getColumn(0);
+            return tmp;
+        }
+
+
+        namequery.reset();
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+}
+
+void SQLiteClass::listUsers()
+{
+    try
+    {
+
+        SQLite::Statement   namequery(dbread, "SELECT Name FROM Users");
+
+        while (namequery.executeStep())
+        {
+            std::string tmpname = namequery.getColumn(0);
+            std::cout << tmpname << std::endl;
+        }
+
+
+        namequery.reset();
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+
+}
+
 void SQLiteClass::addUser(std::string name)
 {
     try
@@ -47,11 +96,34 @@ void SQLiteClass::addUser(std::string name)
 
 }
 
-void SQLiteClass::removeDatabase(std::string name, std::string table)
+void SQLiteClass::removeUser(std::string name)
 {
     try
     {
-        std::string tmpquery = "DELETE From " + table + " WHERE Name = (?)";
+        std::string tmpquery = "DELETE From Users WHERE Name = (?)";
+        SQLite::Statement   query(dbwrite, tmpquery);
+
+        SQLite::Transaction transaction(dbwrite);
+
+        query.bind(1, name);
+        query.exec();
+        query.reset();
+
+        transaction.commit();
+
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+}
+
+void SQLiteClass::removeService(std::string name)
+{
+    try
+    {
+        std::string tmpquery = "DELETE From Service WHERE Name = (?)";
         SQLite::Statement   query(dbwrite, tmpquery);
 
         SQLite::Transaction transaction(dbwrite);
@@ -74,7 +146,7 @@ void SQLiteClass::ReadFromFile(std::vector<OnlineService>& service)
 {
     try
     {
-        SQLite::Statement   query(dbread, "SELECT * FROM Test");
+        SQLite::Statement   query(dbread, "SELECT * FROM Services");
 
 
         while (query.executeStep())
@@ -92,11 +164,11 @@ void SQLiteClass::ReadFromFile(std::vector<OnlineService>& service)
 
 }
 
-void SQLiteClass::addService(std::string name, int everyfewmonths, int day, int month, int year, double cost, std::string symbol)
+void SQLiteClass::addDefaultService(std::string name, int everyfewmonths, int day, int month, int year, double cost, std::string symbol)
 {
     try
     {
-        SQLite::Statement   query(dbwrite, "INSERT INTO Test (Name,Monthly,Day,Month,Year,Cost,Currency) VALUES (?,?,?,?,?,?,?)");
+        SQLite::Statement   query(dbwrite, "INSERT INTO Services (Name,Monthly,Day,Month,Year,Cost,Currency) VALUES (?,?,?,?,?,?,?)");
 
         SQLite::Transaction transaction(dbwrite);
 

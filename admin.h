@@ -1,18 +1,24 @@
-/*#ifndef ADMIN_H
+#ifndef ADMIN_H
 #define ADMIN_H
 
-class admin :public User
+#include "Users.h"
+#include "sqlitefile.h"
+
+class SQLiteClass;
+
+class Admin :public User
 {
 
 public:
-	addUser();
-	removeUser();
 
-	addDefaultServiceList();
-	removeDefaultServiceList();
+	Admin();
+	Admin(std::string,bool);
+	~Admin();
 
+	void adminAddUser(SQLiteClass&, std::string);
+	void adminRemoveUser(SQLiteClass&, std::string);
+	void adminListUsers(SQLiteClass&);
 
-
+	
 };
 #endif
-*/

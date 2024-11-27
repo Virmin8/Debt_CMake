@@ -1,34 +1,5 @@
 #include "functions.h"
 
-void listUsers()
-{
-    try
-    {
-        
-        SQLite::Database    db("../Services.db");
-        SQLite::Statement   namequery(db, "SELECT Name FROM Users");
-
-        SQLite::Transaction transaction(db);
-        while (namequery.executeStep())
-        {
-            std::string tmpname = namequery.getColumn(0);
-            std::cout << tmpname << std::endl;
-        }
-        
-
-        namequery.reset();
-
-    }
-    catch (std::exception& e)
-    {
-        std::cout << "exception: " << e.what() << std::endl;
-    }
-}
-
-void removeUser(std::string name, SQLiteClass& db)
-{
-    db.removeDatabase(name,"Users");
-}
 
 double TotalMonthly(int month, std::vector<OnlineService>& Services)
 {
@@ -220,7 +191,7 @@ void addServiceList(std::vector<OnlineService>& Services, SQLiteClass& db)
     OnlineService tmp(name, everyfemonths, day, month, year, cost, symbol);
     Services.push_back(tmp);
 
-    db.addService(name, everyfemonths, day, month, year, cost, symbol);
+    db.addDefaultService(name, everyfemonths, day, month, year, cost, symbol);
     
 }
 
@@ -247,7 +218,7 @@ void removeService(std::vector<OnlineService>& Services, SQLiteClass& db)
 
     }
    
-    db.removeDatabase(name, "Test");
+    db.removeService(name);
    
     ListServices(Services);
 

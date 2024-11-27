@@ -2,6 +2,7 @@
 #define USERS_H
 
 #include <string>
+#include "onlineservice.h"
 
 class User {
 private:
@@ -10,11 +11,15 @@ private:
 
 public:
 
-	User(std::string, bool);
+	User();
+	User(std::string,bool);
 	~User();
-	addService();
-	removeService();
+	void addService();
+	void removeService();
+	void listUserServices();
 	
-	
+	std::string getName();
+	bool getAdmin();
+
 };
 #endif

@@ -1,18 +1,31 @@
-/*#include "admin.h"
+#include "admin.h"
 
-admin::addUser()
+Admin::Admin() : User()
 {
+
 }
 
-admin::removeUser()
+Admin::Admin(std::string name, bool admin) : User(name,admin)
 {
+
 }
 
-admin::addDefaultServiceList()
+void Admin::adminAddUser(SQLiteClass& db, std::string name)
 {
+	db.addUser(name);
 }
 
-admin::removeDefaultServiceList()
+void Admin::adminRemoveUser(SQLiteClass& db, std::string name)
 {
+	db.removeUser(name);
 }
-*/
+
+void Admin::adminListUsers(SQLiteClass& db)
+{
+	db.listUsers();
+}
+
+Admin::~Admin()
+{
+
+}

@@ -6,7 +6,8 @@
 #include <string>
 #include <iostream>
 #include "onlineservice.h"
-//#include "admin.h"
+#include "Users.h"
+#include "admin.h"
 
 class SQLiteClass{
 
@@ -15,16 +16,24 @@ private:
 	SQLite::Database dbread;
 	SQLite::Database dbwrite;
 
+protected:
+
+	void listUsers();
+	void addUser(std::string);
+	void removeUser(std::string);
+
+	friend class Admin;
+
 public:
 
     SQLiteClass();
 	~SQLiteClass();
 
-	void addUser(std::string); //make private
-	void removeDatabase(std::string, std::string);
+	int createUser(std::string);
+	
+	void removeService(std::string);
 	void ReadFromFile(std::vector<OnlineService>&);
-	void addService(std::string, int, int, int, int, double, std::string);
-	//friend class admin;
+	void addDefaultService(std::string, int, int, int, int, double, std::string);
 };
 
 

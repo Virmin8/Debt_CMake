@@ -8,6 +8,7 @@
 #include "TextColour.h"
 #include "sqlitefile.h"
 
+
 tm* getTime();
 
 void ReadFromFile(std::vector<OnlineService>&);
@@ -20,11 +21,7 @@ double RestYearly(std::vector<OnlineService>&);
 void print(int,std::vector<OnlineService>&);
 void ListServices(std::vector<OnlineService>&);
 
-void addServiceList(std::vector<OnlineService>&,SQLiteClass&);
-void removeService(std::vector<OnlineService>& ,SQLiteClass& );
-
-void addUser(std::string);
-void removeUser(std::string, SQLiteClass&);
-void listUsers();
+void addServiceList(std::vector<OnlineService>&, SQLiteClass&);
+void removeService(std::vector<OnlineService>& , SQLiteClass&);
 
 #endif
