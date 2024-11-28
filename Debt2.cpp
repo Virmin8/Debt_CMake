@@ -3,6 +3,7 @@
 // Add List of Currencies
 //Add Password Option
 //Change User not working
+//add checks when adding and removeing Services
 
 #pragma
 #include "functions.h"
