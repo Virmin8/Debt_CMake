@@ -19,9 +19,5 @@ double TotalYearly(std::vector<OnlineService>&);
 double RestMonthly(int, std::vector<OnlineService>&);
 double RestYearly(std::vector<OnlineService>&);
 void print(int,std::vector<OnlineService>&);
-void ListServices(std::vector<OnlineService>&);
-
-void addServiceList(std::vector<OnlineService>&, SQLiteClass&);
-void removeService(std::vector<OnlineService>& , SQLiteClass&);
 
 #endif

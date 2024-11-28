@@ -22,10 +22,11 @@ private:
     void rollOver();
     int length;
     double convertedCost;
+    int ID;
 
     
 public:
-    OnlineService(std::string, int, int, int, int, double , std::string);
+    OnlineService(int,std::string, int, int, int, int, double , std::string);
     ~OnlineService();
 
     int getDay();
@@ -44,7 +45,7 @@ public:
     void setYear(int);
     void setName(std::string);
     void setLength(int);
-    
+    int getID();
 
     void print();
     void print(int, int, std::string);

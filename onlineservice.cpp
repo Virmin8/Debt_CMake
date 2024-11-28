@@ -4,7 +4,7 @@
 
 using json = nlohmann::json;
 
-OnlineService::OnlineService(std::string  _name, int _everyfemonths, int _day, int _month, int _year, double _cost, std::string _symbol)
+OnlineService::OnlineService(int _ID, std::string  _name, int _everyfemonths, int _day, int _month, int _year, double _cost, std::string _symbol)
 {
     name = _name;
     everyfemonths = _everyfemonths;
@@ -13,6 +13,7 @@ OnlineService::OnlineService(std::string  _name, int _everyfemonths, int _day, i
     year = _year;
     symbol = _symbol;
     cost = _cost;
+    ID = _ID;
     convertedCost = 0;
     if (symbol != "ZAR")
     {
@@ -182,7 +183,7 @@ void OnlineService::print()
         totalCost = convertedCost;
     }
 
-    std::cout << name << " Costs: " << totalCost  << "\n";
+    std::cout << "[" << ID << "] " << name << " Costs: " << totalCost << "\n";
 }
 
 void OnlineService::print(int _month, int _year, std::string _paid)
@@ -196,12 +197,17 @@ void OnlineService::print(int _month, int _year, std::string _paid)
     {
         totalCost = convertedCost;
     }
-    std::cout << name << " Costs: " << totalCost << " Next Payment Due: " << day << "/" << _month << "/" << year + _year << " Paid: " << _paid << " "  << "\n";
+    std::cout << "[" << ID << "] " << name << " Costs: " << totalCost << " Next Payment Due: " << day << "/" << _month << "/" << year + _year << " Paid: " << _paid << " "  << "\n";
 }
 
 void OnlineService::setLength(int _length)
 {
     length = _length;
+}
+
+int OnlineService::getID()
+{
+    return ID;
 }
 
 OnlineService::~OnlineService()

@@ -1,8 +1,8 @@
 // work on app version, backend seems pretty much done
 // add short term Service
-// Add Users, which link to seperate Services
 // Add List of Currencies
 //Add Password Option
+//Change User not working
 
 #pragma
 #include "functions.h"
@@ -10,6 +10,7 @@
 #include "program.h"
 #include "sqlitefile.h"
 #include "Users.h"
+#include "admin.h"
 
 int main() {
 
@@ -19,10 +20,8 @@ int main() {
     int year = now->tm_year + 1900;
     char answer;
     std::string response;
-    Admin administrator;
-    User user;
-
-    std::vector<OnlineService> defaultServices;
+    Admin * administrator = new Admin;
+    User * user = new User;
 
     SQLiteClass database;
         
@@ -31,41 +30,38 @@ int main() {
     bool username = false;
     bool change = false;
 
-    database.ReadFromFile(defaultServices);
-
-
     std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n";
 
-   
-         while (!username)
+  
+        while (!username)
         {
             std::cout << "Please enter Username: ";
             std::cin >> response;
             int admin = database.createUser(response);
-            change = false;
 
             if (admin == 1)
             {
-                Admin tmp (response, admin);
-                administrator = tmp;
+                Admin* tmp = new Admin(response, admin, database);
+                *administrator = *tmp;
                 username = true;
-               std::cout<< administrator.getAdmin();
+                delete tmp;
             }
             else if (admin == 0)
             {
-                User tmp(response, admin);
-                user = tmp;
+                User* tmp = new User(response, admin,database);
+                *user = *tmp;
+                delete tmp;
                 username = true;
             }
             else
                 std::cout << "\nUsername does not exist, please ask the Admin to create a user or enter the a valid Username!!\n\n";
         }
 
-        if (administrator.getAdmin() == true)
+        if (administrator->getAdmin() == true)
         {
             while (!quit)
             {
-                std::cout << "\nAdd User (1), Remove User (2), List Users (3), List Services (4), Change User (5), Quit (8): ";
+                std::cout << "\nAdd User (1), Remove User (2), List Users (3), List Services (4), Remove Default Service (5), Add Default Service (6), Change User (7), Quit (8): ";
                 std::cin >> answer;
 
                 switch (answer)
@@ -73,22 +69,29 @@ int main() {
                 case '1':
                     std::cout << "Please add User name: ";
                     std::cin >> response;
-                    administrator.adminAddUser(database, response);
+                    administrator->adminAddUser(database, response);
                     break;
                 case '2':
-                    administrator.adminListUsers(database);
+                    administrator->adminListUsers(database);
                     std::cout << "Please select User name: ";
                     std::cin >> response;
-                   administrator.adminRemoveUser(database,response);
+                    administrator->adminRemoveUser(database, response);
                     break;
                 case '3':
-                   administrator.adminListUsers(database);
+                    administrator->adminListUsers(database);
                     break;
                 case '4':
-                    ListServices(defaultServices);
+                    administrator->listServices();
                     break;
-                case '5' :
+                case '5':
+                    administrator->removeService(database,administrator->getDefaultServices());
+                    break;
+                case '6':
+                    administrator->customService(database);
+                    break;
+                case '7':
                     change = true;
+                    username = false;
                     break;
                 case '8':
                     quit = true;
@@ -98,9 +101,10 @@ int main() {
                 }
 
             }
+            
         }
 
-        if (user.getAdmin() == 0)
+        if (user->getAdmin() == 0)
         {
             while (!quit)
             {
@@ -111,19 +115,20 @@ int main() {
                 {
 
                 case '1':
-                    addServiceList(defaultServices, database);
+                    user->addService(database);
                     break;
                 case '2':
-                    removeService(defaultServices, database);
+                    user->removeService(database);
                     break;
                 case '3':
-                    ListServices(defaultServices);
+                    user->listServices(user->getUsertServices());
                     break;
                 case '4':
-                    mainProgram(month, defaultServices);
+                    mainProgram(month, user->getUsertServices());
                     break;
                 case '5':
                     change = true;
+                    username = false;
                     break;
                 case '8':
                     quit = true;
@@ -135,6 +140,9 @@ int main() {
             }
 
         }
-
+        
+    
+    delete user;
+    delete administrator;
     return 0;
 }
