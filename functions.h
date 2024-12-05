@@ -7,6 +7,7 @@
 #include <chrono>
 #include "TextColour.h"
 #include "sqlitefile.h"
+#include <limits>
 
 
 tm* getTime();

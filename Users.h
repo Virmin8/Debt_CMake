@@ -1,8 +1,10 @@
 #ifndef USERS_H
 #define USERS_H
-
+#define NOMINMAX
 #include <string>
 #include "sqlitefile.h"
+#include <map>
+#include "functions.h"
 
 class SQLiteClass;
 
@@ -13,6 +15,7 @@ private:
 	std::vector<OnlineService> userServices;
 	std::vector<OnlineService> defaultServices;
 	int ID;
+	std::map<int, int> mapYear;
 
 public:
 

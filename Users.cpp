@@ -1,3 +1,4 @@
+
 #include "Users.h"
 #include "sqlitefile.h"
 
@@ -8,6 +9,31 @@ User::User()
 	userServices;
 	defaultServices;
 	ID = 0;
+	tm* time = getTime();
+
+	mapYear[1] = 31;
+	if ((time->tm_year + 1900 % 4 == 0 && time->tm_year + 1900 % 100 != 0) || time->tm_year + 1900 % 400 == 0)
+	{
+		mapYear[2] = 29;
+	}
+	else
+	{
+		mapYear[2] = 28;
+	}
+
+	mapYear[3] = 31;
+	mapYear[4] = 30;
+	mapYear[5] = 31;
+	mapYear[6] = 30;
+	mapYear[7] = 31;
+	mapYear[8] = 31;
+	mapYear[9] = 30;
+	mapYear[10] = 31;
+	mapYear[11] = 30;
+	mapYear[12] = 31;
+
+	
+
 
 }
 User::User(std::string _name,bool _admin, SQLiteClass& db)
@@ -17,7 +43,30 @@ User::User(std::string _name,bool _admin, SQLiteClass& db)
 	db.ReadFromFile(defaultServices);
 	ID = db.getUserID(name);
 	db.populateUserService(userServices,ID);
+	tm* time = getTime();
 
+	mapYear[1] = 31;
+	if ((time->tm_year + 1900 % 4 == 0 && time->tm_year + 1900 % 100 != 0) || time->tm_year + 1900 % 400 == 0)
+	{
+		mapYear[2] = 29;
+	}
+	else
+	{
+		mapYear[2] = 28;
+	}
+	
+	mapYear[3] = 31;
+	mapYear[4] = 30;
+	mapYear[5] = 31;
+	mapYear[6] = 30;
+	mapYear[7] = 31;
+	mapYear[8] = 31;
+	mapYear[9] = 30;
+	mapYear[10] = 31;
+	mapYear[11] = 30;
+	mapYear[12] = 31;
+
+	
 }
 
 User::~User()
@@ -103,26 +152,44 @@ void User::customService(SQLiteClass& db)
 				exists = false;
 		}
 	}
-	std::cout << "Please enter every few months: ";
-	std::cin >> everyfemonths;
-	std::cout << "Please enter payment day: ";
-	std::cin >> day;
-	std::cout << "Please enter payment month: ";
-	std::cin >> month;
-	std::cout << "Please enter payment year: ";
-	std::cin >> year;
-	std::cout << "Please enter payment cost: ";
-	std::cin >> cost;
-	/*std::cout << "Please enter Currency Symbol? :";
-	std::cin >> symbol;*/
-	std::cout << "\n";
+	
+		std::cout << "Please enter every few months: ";
+		std::cin >> everyfemonths;
 
+		
+		std::cout << "Please enter payment month (1-12): ";
+		while (!(std::cin >> month) || month < 1 || month > 12)
+		{
+			std::cout << "Invalid Input!! Please enter a valid month: ";
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+
+		std::cout << "Please enter payment day (1-" << mapYear[month] <<"): ";
+		while (!(std::cin >> day) || mapYear[month] >> day || day < 1)
+		{
+			std::cout << "Invalid Input!! Please enter a valid day: ";
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		
+
+		tm* time = getTime();
+		year = time->tm_year + 1900;
+
+		std::cout << "Please enter payment cost: ";
+		std::cin >> cost;
+		/*std::cout << "Please enter Currency Symbol? :";
+		std::cin >> symbol;*/
+		std::cout << "\n";
+	
 	OnlineService tmp(db.getLastID() + 1, name, everyfemonths, day, month, year, cost, symbol);
 	defaultServices.push_back(tmp);
 	userServices.push_back(tmp);
 
 	db.addDefaultService(name, everyfemonths, day, month, year, cost, symbol);
 	db.addService(ID, defaultServices.size());
+	
 }
 
 std::vector<OnlineService> User::getDefaultServices()
@@ -143,7 +210,7 @@ void User::setDefaultServices(std::vector<OnlineService>& s)
 void User::addService(SQLiteClass& db)
 {
 	int answer;
-	bool work = false;
+	
 
 	
 		std::cout << "Please select from the following services: \n";
@@ -163,7 +230,7 @@ void User::addService(SQLiteClass& db)
 				{
 					userServices.push_back(defaultServices[i]);
 					db.addService(ID, answer);
-					work = true;
+					
 				}
 
 			}
