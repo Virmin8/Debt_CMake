@@ -174,7 +174,10 @@ void User::customService(SQLiteClass& db)
 		}
 
 		std::cout << "Please enter payment day (1-" << mapYear[month] <<"): ";
-		while (!(std::cin >> day) || (day <= mapYear[month] && day > 0)) //Fix this
+		std::cin >> day;
+		bool test = day <= mapYear[month] && day > 0;
+		std::cout << test;
+		while (!(std::cin >> day) || day > mapYear[month] || day < 1) 
 		{
 			std::cout << "Invalid Input!! Please enter a valid day: ";
 			std::cin.clear();

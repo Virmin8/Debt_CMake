@@ -42,9 +42,8 @@ int main() {
             std::cout << "\nPlease enter Username: ";
         
 
-            while (!(std::cin >> response) || database.getUserID(response) < 0)
+            while (!(std::cin >> response) || database.getUserID(response) == 0) 
             {
-            std::cout << response << database.createUser(response);
             std::cout << "\nUsername does not exist, please ask the Admin to create a user or enter the a valid Username!!\n\n";
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -82,9 +81,7 @@ int main() {
                         break;
                     case '2':
                         administrator->adminListUsers(database);
-                        std::cout << "Please select User name: ";
-                        std::cin >> response;
-                        administrator->adminRemoveUser(database, response);
+                        administrator->adminRemoveUser(database);
                         break;
                     case '3':
                         administrator->adminListUsers(database);

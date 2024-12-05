@@ -2,6 +2,7 @@
 #define ADMIN_H
 
 #include "Users.h"
+#include <set>
 
 
 class SQLiteClass;
@@ -16,7 +17,7 @@ public:
 	~Admin();
 
 	void adminAddUser(SQLiteClass&, std::string);
-	void adminRemoveUser(SQLiteClass&, std::string);
+	void adminRemoveUser(SQLiteClass&);
 	void adminListUsers(SQLiteClass&);
 	void listServices();
 	void removeService(SQLiteClass&, std::vector<OnlineService>&);

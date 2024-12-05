@@ -57,17 +57,40 @@ int SQLiteClass::getUserID(std::string name)
     return ID;
 }
 
+std::string SQLiteClass::getUserName(int ID)
+{
+    std::string name = "notavailable";
+    try
+    {
+        SQLite::Statement   namequery(dbread, "SELECT Name FROM Users WHERE ID = (?)");
+        namequery.bind(1, ID);
+
+        while (namequery.executeStep())
+        {
+            std::string name = namequery.getColumn(0);
+
+        }
+        namequery.reset();
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+    return name;
+}
+
 void SQLiteClass::listUsers()
 {
     try
     {
 
-        SQLite::Statement   namequery(dbread, "SELECT Name FROM Users");
+        SQLite::Statement   namequery(dbread, "SELECT Name,ID FROM Users");
 
         while (namequery.executeStep())
         {
             std::string tmpname = namequery.getColumn(0);
-            std::cout << tmpname << std::endl;
+            int tempID = namequery.getColumn(1);
+            std::cout << "[" << tempID << "] " << tmpname << std::endl;
         }
 
 
@@ -79,6 +102,32 @@ void SQLiteClass::listUsers()
         std::cout << "exception: " << e.what() << std::endl;
     }
 
+}
+
+std::set<int> SQLiteClass::getlistUsers()
+{
+    std::set<int> list;
+    try
+    {
+
+        SQLite::Statement   namequery(dbread, "SELECT ID FROM Users");
+
+        while (namequery.executeStep())
+        {
+            int tempID = namequery.getColumn(0);
+            list.insert(tempID);
+            
+        }
+
+
+        namequery.reset();
+
+    }
+    catch (std::exception& e)
+    {
+        std::cout << "exception: " << e.what() << std::endl;
+    }
+    return list;
 }
 
 void SQLiteClass::addUser(std::string name)
@@ -118,19 +167,10 @@ void SQLiteClass::addUser(std::string name)
 
 }
 
-void SQLiteClass::removeUser(std::string name)
+void SQLiteClass::removeUser(int id)
 {
     try
     {
-        int id;
-        SQLite::Statement user(dbread, "SELECT ID FROM Users WHERE Name = (?)");
-        user.bind(1, name);
-
-        while (user.executeStep())
-        {
-            id = user.getColumn(0);
-        }
-
 
         std::string tmpquery = "DELETE From Users WHERE ID = (?)";
         SQLite::Statement   query(dbwrite, tmpquery);

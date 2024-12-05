@@ -7,6 +7,7 @@
 #include <iostream>
 #include "onlineservice.h"
 #include "users.h"
+#include <set>
 
 class SQLiteClass{
 
@@ -19,7 +20,7 @@ protected:
 
 	void listUsers();
 	void addUser(std::string);
-	void removeUser(std::string);
+	void removeUser(int);
 	void removeDefaultService(int);
 	friend class Admin;
 
@@ -37,10 +38,10 @@ public:
 
 	void addDefaultService(std::string, int, int, int, int, double, std::string);
 	
-
+	std::string getUserName(int);
 	void addService(int, int);
 	void removeService(int,int);
-
+	std::set<int> getlistUsers();
 	int getLastID();
 };
 
