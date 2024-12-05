@@ -3,6 +3,7 @@
 // Add List of Currencies
 // Add Password Option
 // add checks when adding and removeing Services
+// Allow only one service
 
 #define NOMINMAX
 #pragma
@@ -20,15 +21,12 @@ int main() {
     int month = now->tm_mon + 1;
     int year = now->tm_year + 1900;
     char answer;
-    std::string response;
-    Admin* administrator = new Admin;
-    User* user = new User;
+    
 
     SQLiteClass database;
 
 
-    bool quit = false;
-    bool username = false;
+    
     bool usercheck = false;
 
     std::cout << "The Current Date is :" << day << "/" << month << "/" << year << "\n";
@@ -36,7 +34,11 @@ int main() {
 
     while (!usercheck)
     {
-        quit = false;
+        bool quit = false;
+        std::string response;
+        Admin* administrator = new Admin;
+        User* user = new User;
+
             std::cout << "\nPlease enter Username: ";
         
 
@@ -150,10 +152,10 @@ int main() {
 
 
 
-
-        }
-        delete user;
-        delete administrator;
+            delete user;
+            delete administrator;
+    }
+    
         
     
     return 0;

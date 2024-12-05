@@ -37,15 +37,18 @@ void Admin::listServices()
 
 void Admin::removeService(SQLiteClass& db, std::vector<OnlineService>& service)
 {
-	bool work = false;
 	
-
-
 	int answer;
 	std::cout << "Please select from the following services: \n";
 	listServices();
 	std::cout << std::endl;
-	std::cin >> answer;
+
+	while (!(std::cin >> answer) || !serviceIDExists(answer, service))
+	{
+		std::cout << "Invalid Input!! Please enter a valid service: ";
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
 
 	for (int i = 0; i < service.size(); i++)
 	{
@@ -54,7 +57,7 @@ void Admin::removeService(SQLiteClass& db, std::vector<OnlineService>& service)
 			service.erase(service.begin() + i);
 			setDefaultServices(service);
 			db.removeDefaultService(answer);
-			work = false;
+			
 		}
 
 

@@ -2,6 +2,36 @@
 #include "Users.h"
 #include "sqlitefile.h"
 
+std::map<int, int> User::getMap()
+{
+	std::map<int, int> tmp;
+
+	tm* time = getTime();
+
+	tmp[1] = 31;
+	if ((time->tm_year + 1900 % 4 == 0 && time->tm_year + 1900 % 100 != 0) || time->tm_year + 1900 % 400 == 0)
+	{
+		tmp[2] = 29;
+	}
+	else
+	{
+		tmp[2] = 28;
+	}
+
+	tmp[3] = 31;
+	tmp[4] = 30;
+	tmp[5] = 31;
+	tmp[6] = 30;
+	tmp[7] = 31;
+	tmp[8] = 31;
+	tmp[9] = 30;
+	tmp[10] = 31;
+	tmp[11] = 30;
+	tmp[12] = 31;
+
+	return tmp;
+}
+
 User::User()
 {
 	name = "default";
@@ -9,28 +39,7 @@ User::User()
 	userServices;
 	defaultServices;
 	ID = 0;
-	tm* time = getTime();
-
-	mapYear[1] = 31;
-	if ((time->tm_year + 1900 % 4 == 0 && time->tm_year + 1900 % 100 != 0) || time->tm_year + 1900 % 400 == 0)
-	{
-		mapYear[2] = 29;
-	}
-	else
-	{
-		mapYear[2] = 28;
-	}
-
-	mapYear[3] = 31;
-	mapYear[4] = 30;
-	mapYear[5] = 31;
-	mapYear[6] = 30;
-	mapYear[7] = 31;
-	mapYear[8] = 31;
-	mapYear[9] = 30;
-	mapYear[10] = 31;
-	mapYear[11] = 30;
-	mapYear[12] = 31;
+	mapYear = getMap();
 
 	
 
@@ -43,28 +52,7 @@ User::User(std::string _name,bool _admin, SQLiteClass& db)
 	db.ReadFromFile(defaultServices);
 	ID = db.getUserID(name);
 	db.populateUserService(userServices,ID);
-	tm* time = getTime();
-
-	mapYear[1] = 31;
-	if ((time->tm_year + 1900 % 4 == 0 && time->tm_year + 1900 % 100 != 0) || time->tm_year + 1900 % 400 == 0)
-	{
-		mapYear[2] = 29;
-	}
-	else
-	{
-		mapYear[2] = 28;
-	}
-	
-	mapYear[3] = 31;
-	mapYear[4] = 30;
-	mapYear[5] = 31;
-	mapYear[6] = 30;
-	mapYear[7] = 31;
-	mapYear[8] = 31;
-	mapYear[9] = 30;
-	mapYear[10] = 31;
-	mapYear[11] = 30;
-	mapYear[12] = 31;
+	mapYear = getMap();
 
 	
 }
@@ -73,16 +61,36 @@ User::~User()
 {
 }
 
+bool User::serviceIDExists(int tmp, std::vector<OnlineService>& service)
+{
+	bool answer = false;
+	for (int i = 0; i < service.size(); i++)
+	{
+		if (tmp == service[i].getID())
+		{
+			answer = true;
+			
+		}
+	}
+	return answer;
+}
 void User::removeService(SQLiteClass& db)
 {	
-	bool work = false;
+	
 
 	
 		int answer;
 		std::cout << "Please select from the following services: \n";
 		listServices(userServices);
 		std::cout << std::endl;
-		std::cin >> answer;
+
+		while (!(std::cin >> answer) || !serviceIDExists(answer,userServices))
+		{
+			std::cout << "Invalid Input!! Please enter a valid service: ";
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		
 
 		for (int i = 0; i < userServices.size(); i++)
 		{
@@ -90,7 +98,7 @@ void User::removeService(SQLiteClass& db)
 			{
 				userServices.erase(userServices.begin() + i);
 				db.removeService(ID, answer);
-				work = false;
+				
 			}
 			
 
@@ -166,7 +174,7 @@ void User::customService(SQLiteClass& db)
 		}
 
 		std::cout << "Please enter payment day (1-" << mapYear[month] <<"): ";
-		while (!(std::cin >> day) || mapYear[month] >> day || day < 1)
+		while (!(std::cin >> day) || (day <= mapYear[month] && day > 0)) //Fix this
 		{
 			std::cout << "Invalid Input!! Please enter a valid day: ";
 			std::cin.clear();
@@ -210,13 +218,19 @@ void User::setDefaultServices(std::vector<OnlineService>& s)
 void User::addService(SQLiteClass& db)
 {
 	int answer;
-	
+	int size = defaultServices.size() + 1;
 
 	
 		std::cout << "Please select from the following services: \n";
 		listServices(defaultServices);
-		std::cout << "[" << defaultServices.size() +1 << "]" << " Custom Service\n";
-		std::cin >> answer;
+		std::cout << "[" << size << "]" << " Custom Service\n";
+
+		while (!(std::cin >> answer) || !serviceIDExists(answer,defaultServices) && answer != defaultServices.size() +1)
+		{
+			std::cout << "Invalid Input!! Please enter a valid service: ";
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
 
 		if (answer == defaultServices.size() + 1)
 		{

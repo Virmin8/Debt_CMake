@@ -17,6 +17,8 @@ private:
 	int ID;
 	std::map<int, int> mapYear;
 
+	std::map<int, int> getMap();
+
 public:
 
 	User();
@@ -37,6 +39,7 @@ public:
 	std::vector<OnlineService> getDefaultServices();
 	std::vector<OnlineService> getUsertServices();
 	void setDefaultServices(std::vector<OnlineService>&);
+	bool serviceIDExists(int,std::vector<OnlineService>&);
 	
 };
 #endif
