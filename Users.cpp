@@ -161,9 +161,14 @@ void User::customService(SQLiteClass& db)
 		}
 	}
 	
-		std::cout << "Please enter every few months: ";
-		std::cin >> everyfemonths;
+		std::cout << "Please enter every few months: "; //add check that it is a number
+		while (!(std::cin >> everyfemonths))
+		{
+			std::cout << "Invalid Input!! Please enter a valid monthly: ";
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+		}
 		
 		std::cout << "Please enter payment month (1-12): ";
 		while (!(std::cin >> month) || month < 1 || month > 12)
@@ -173,10 +178,8 @@ void User::customService(SQLiteClass& db)
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
 
-		std::cout << "Please enter payment day (1-" << mapYear[month] <<"): ";
-		std::cin >> day;
-		bool test = day <= mapYear[month] && day > 0;
-		std::cout << test;
+		std::cout << "Please enter payment day (1-" << mapYear[month] << "): ";
+		
 		while (!(std::cin >> day) || day > mapYear[month] || day < 1) 
 		{
 			std::cout << "Invalid Input!! Please enter a valid day: ";

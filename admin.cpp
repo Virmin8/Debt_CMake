@@ -15,20 +15,19 @@ void Admin::adminAddUser(SQLiteClass& db, std::string name)
 	db.addUser(name);
 }
 
-void Admin::adminRemoveUser(SQLiteClass& db) // Fix this
+void Admin::adminRemoveUser(SQLiteClass& db) 
 {
 	int answer;
 	std::cout << "Please select UserID: \n";
 	std::set<int> list = db.getlistUsers();
-	std::cout << list.size();
-
-	while (!(std::cin >> answer) || list.find(answer) == list.end());
+	
+	while (!(std::cin >> answer) || list.find(answer) == list.end())
 	{
 		std::cout << "Invalid Input!! Please enter a valid User: ";
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 	}
-	std::cout << "Fuck";
+	
 	db.removeUser(answer);
 }
 
