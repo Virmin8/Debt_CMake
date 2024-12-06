@@ -161,7 +161,7 @@ void User::customService(SQLiteClass& db)
 		}
 	}
 	
-		std::cout << "Please enter every few months: "; //add check that it is a number
+		std::cout << "Please enter every few months: "; 
 		while (!(std::cin >> everyfemonths))
 		{
 			std::cout << "Invalid Input!! Please enter a valid monthly: ";
